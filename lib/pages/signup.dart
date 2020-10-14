@@ -313,22 +313,28 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                                 autocorrect: false,
                                 decoration: textFieldInputDecoration("School")
                                 ),
-                                FlatButton(
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: RaisedButton(
+                                    color: Color(0xff5FBA94),
     onPressed: () {
-        DatePicker.showDatePicker(context,
+        DatePicker.showDatePicker(
+          context,
                               showTitleActions: true,
-                              minTime: DateTime(2018, 3, 5),
-                              maxTime: DateTime(2019, 6, 7), onChanged: (date) {
-                            print('change $date');
-                          }, onConfirm: (date) {
+                              minTime: DateTime(1998, 1, 1),
+                              maxTime: DateTime.now(), 
+                               onConfirm: (date) {
                             print('confirm $date');
-                          }, currentTime: DateTime.now(), locale: LocaleType.zh);
+                          }, 
+                          currentTime: DateTime.now(), 
+                          locale: LocaleType.en);
     },
     child: Text(
-        'show date time picker (Chinese)',
-        style: TextStyle(color: Colors.blue),
+        'Enter your age',
+        style: TextStyle(color: Colors.white),
     )
-    )
+    ),
+                                )
                           ]
                           ),
                         ),
