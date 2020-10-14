@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:internshift/constants.dart';
 import 'package:internshift/functions/auth.dart';
 import 'package:internshift/functions/database.dart';
@@ -209,7 +210,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
       new TextEditingController();
   TextEditingController lastNameTextEditingController =
       new TextEditingController();
-  TextEditingController ageTexteditingController = new TextEditingController();
+  TextEditingController ageTextEditingController = new TextEditingController();
   TextEditingController schoolTextEditingController =
       new TextEditingController();
   TextEditingController locationTextEditingController =
@@ -310,8 +311,26 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                                 controller: schoolTextEditingController,
                                 style: simpleTextFieldStyle(),
                                 autocorrect: false,
-                                decoration: textFieldInputDecoration("School")),
-                          ]),
+                                decoration: textFieldInputDecoration("School")
+                                ),
+                                FlatButton(
+    onPressed: () {
+        DatePicker.showDatePicker(context,
+                              showTitleActions: true,
+                              minTime: DateTime(2018, 3, 5),
+                              maxTime: DateTime(2019, 6, 7), onChanged: (date) {
+                            print('change $date');
+                          }, onConfirm: (date) {
+                            print('confirm $date');
+                          }, currentTime: DateTime.now(), locale: LocaleType.zh);
+    },
+    child: Text(
+        'show date time picker (Chinese)',
+        style: TextStyle(color: Colors.blue),
+    )
+    )
+                          ]
+                          ),
                         ),
                         SizedBox(height: 8),
                         //

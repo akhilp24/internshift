@@ -30,6 +30,7 @@ dependencies:
   http:
   
   firebase_auth: ^0.16.0
+  flutter_datetime_picker: ^1.4.0
   shared_preferences: ^0.5.7+3
   cloud_firestore:
   
