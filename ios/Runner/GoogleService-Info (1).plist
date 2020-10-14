@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>209575725491-dkrfucqapiifr76frut7bsrtap4dd3nq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.209575725491-dkrfucqapiifr76frut7bsrtap4dd3nq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBGb5B5_-UzLr5QVEFvpsuj9l4atj8-A1g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>209575725491</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.iamakhil.internshift</string>
+	<key>PROJECT_ID</key>
+	<string>internshift2020</string>
+	<key>STORAGE_BUCKET</key>
+	<string>internshift2020.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:209575725491:ios:9933a7fe8980709a9563c6</string>
+	<key>DATABASE_URL</key>
+	<string>https://internshift2020.firebaseio.com</string>
+</dict>
+</plist>

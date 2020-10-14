@@ -21,10 +21,18 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  carousel_slider: ^2.3.1
-  flutter_pdfview:
-  path_provider: 
+
+  
+  path_provider:
+  firebase_storage:
+  image_picker:
+  url_launcher: 
   http:
+  
+  firebase_auth: ^0.16.0
+  shared_preferences: ^0.5.7+3
+  cloud_firestore:
+  
   flutter:
     sdk: flutter
   # pdf_viewer_jk: any

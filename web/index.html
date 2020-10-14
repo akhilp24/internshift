@@ -29,5 +29,29 @@
     }
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDJhFFr8dlYG-oN4wYTPrb4tRzOpy6qmnE",
+    authDomain: "internshift2020.firebaseapp.com",
+    databaseURL: "https://internshift2020.firebaseio.com",
+    projectId: "internshift2020",
+    storageBucket: "internshift2020.appspot.com",
+    messagingSenderId: "209575725491",
+    appId: "1:209575725491:web:3a74a57a5e4a40719563c6",
+    measurementId: "G-1B5MHSTQN3"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
 </body>
 </html>

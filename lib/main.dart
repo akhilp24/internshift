@@ -1,18 +1,20 @@
 
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
+import 'package:internshift/functions/auth.dart';
+
 import 'package:internshift/pages/navigationbarmainpages/notificationspage.dart';
 import 'package:internshift/pages/navigationbarmainpages/profilepage.dart';
 import 'package:internshift/pages/navigationbarmainpages/savedopenings.dart';
-import 'package:internshift/pages/navigationbarmainpages/searchpage.dart';
-import 'package:internshift/pages/pdfviewerpage.dart';
+import 'package:internshift/pages/signin.dart';
 import 'package:internshift/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'constants.dart';
 import 'functions/functions.dart';
-import 'pages/topratedinternshipspage.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'functions/helperfunctions.dart';
+
+
 
 
 
@@ -21,155 +23,116 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool userIsLoggedIn = false;
+
+  @override
+  void initState() {
+    getLoggedInState();
+    super.initState();
+  }
+
+  getLoggedInState() async {
+    await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
+      setState(() {
+        userIsLoggedIn = value ?? false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'InternShift',
-      home: MainPage(),
+      home: userIsLoggedIn ? MainPage(): SignInPage(),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
+  final String userName;
+  MainPage({this.userName});
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  String assetPDFPath = "";
-  String urlPDFPath = "";
-
+  
+  
+  int currentIndex = 1;
   @override
   void initState() {
     super.initState();
-
-    getFileFromAsset("assets/Akhil_Resume.pdf").then((f) {
-      setState(() {
-        assetPDFPath = f.path;
-        print(assetPDFPath);
-      });
-    });
-
-    // getFileFromUrl("http://www.pdf995.com/samples/pdf.pdf").then((f) {
-    //   setState(() {
-    //     urlPDFPath = f.path;
-    //     print(urlPDFPath);
-    //   });
-    // });
+    print(HelperFunctions.getUserNameSharedPreference().toString());
   }
 
-  Future<File> getFileFromAsset(String asset) async {
-    try {
-      var data = await rootBundle.load(asset);
-      var bytes = data.buffer.asUint8List();
-      var dir = await getApplicationDocumentsDirectory();
-      File file = File("${dir.path}/mypdf.pdf");
-
-      File assetFile = await file.writeAsBytes(bytes);
-      return assetFile;
-    } catch (e) {
-      throw Exception("Error opening asset file");
-    }
-  }
-
-  // Future<File> getFileFromUrl(String url) async {
-  //   try {
-  //     var data = await http.get(url);
-  //     var bytes = data.bodyBytes;
-  //     var dir = await getApplicationDocumentsDirectory();
-  //     File file = File("${dir.path}/mypdfonline.pdf");
-
-  //     File urlFile = await file.writeAsBytes(bytes);
-  //     return urlFile;
-  //   } catch (e) {
-  //     throw Exception("Error opening url file");
-  //   }
-  // }
-  int _currentIndex = 0;
+  
+  
   final _children = [
-    HomePage(),
+    
     Saved(),
-    SearchPage(),
+    HomePage(),
     NotificationsPage(),
-    ProfilePage()
+    
   ];
   void onTabTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      currentIndex = index;
     });
   }
+ 
   
+  String ifItIsABigDeviceHome() {
+    if (MediaQuery.of(context).size.width > 500) {
+      return "Home";
+  } else {
+    return "";
+  }
+  }
+
+  String ifItIsABigDeviceSaved() {
+    if (MediaQuery.of(context).size.width > 500) {
+      return "Saved";
+  } else {
+    return "";
+  }
+  }
+
+
+  String ifItIsABigDeviceNotifications() {
+    if (MediaQuery.of(context).size.width > 500) {
+      return "Notifications";
+  } else {
+    return "";
+  }
+  }
+
+  
+
+  bool forPDFIfThereIsBigScreen = false;
+  void getScreenSizeAnddecideLinkLaunchingMethod() {
+    if (MediaQuery.of(context).size.width > 600) {
+      setState(() {
+        forPDFIfThereIsBigScreen = true;
+      });
+    }
+  }
+
 
   
 
   
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      endDrawer: Drawer(
-        child: ListView(padding: EdgeInsets.zero, children: [
-          Stack(alignment: Alignment.center, children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 1 / 3.5,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(color: ColorPalette().themeColor),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                height: 175,
-                width: 175,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(100)),
-                child: Center(
-                    child: Text("BP",
-                        style: TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: ColorPalette().themeColor))),
-              ),
-            )
-          ]),
-          ListTile(
-            title: Text('Ben' + " " + 'Peckham'),
-            leading: Icon(Icons.person),
-          ),
-          ListTile(
-            leading: Icon(Icons.calendar_today),
-            title: Text("Age: " + "15"),
-          ),
-          ListTile(
-            title: Text('ben.peckham@outlook.com'),
-            leading: Icon(Icons.email),
-          ),
-          
-          ListTile(
-            leading: Icon(Icons.school),
-            title: Text('School for the Talented and Gifted'),
-          ),
-          ListTile(
-            leading: Icon(Icons.location_pin),
-            title: Text('Dallas, TX'),
-          ),
-          ListTile(
-            onTap: () {
-              if (urlPDFPath != null) {
-                Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PDFViewerPage(path: assetPDFPath)));
-            }},
-            leading: Icon(Icons.upload_file),
-            title: Text("View Your Resume"),
-          ),
-        ]),
-      ),
+      endDrawer: ProfileDrawer(userName: widget.userName,),
       drawerEnableOpenDragGesture: true,
       appBar: AppBar(
         actions: [
@@ -179,11 +142,14 @@ class _MainPageState extends State<MainPage> {
                 padding: const EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () => Scaffold.of(context).openEndDrawer(),
-                  child: Icon(
-                    // Icons.tune,
-                    Icons.account_circle,
-                    color: ColorPalette().themeColor,
-                    size: 30,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                      child: Icon(
+                      // Icons.tune,
+                      Icons.account_circle,
+                      color: Color(0xff5FBA94),
+                      size: 30,
+                    ),
                   ),
                 ),
               );
@@ -193,56 +159,55 @@ class _MainPageState extends State<MainPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: _children.elementAt(_currentIndex),
+      body: _children.elementAt(currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: Colors.black,
         type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         onTap: onTabTapped,
         items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: ColorPalette().bottomNavigationBarColor,
-              ),
-              label: ""),
+          
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.bookmark,
                 color: ColorPalette().bottomNavigationBarColor,
               ),
-              label: ""),
+              label: ifItIsABigDeviceSaved()),
           BottomNavigationBarItem(
               icon: Stack(
                 children: [
                   Container(
+                    
                     height: 52,
                     width: 52,
                     decoration: BoxDecoration(
-                        color: Color(0xff759E8B),
+                      boxShadow: [
+              BoxShadow(
+                  blurRadius: 3,
+                  spreadRadius: 0,
+                  offset: Offset(1, 1),
+                  color: Colors.grey[400]),
+            ],
+                        color: Color(0xff5FBA94),
                         borderRadius: BorderRadius.circular(20)),
                   ),
                   Icon(
-                    Icons.search,
+                    Icons.home,
                     color: Colors.white,
-                    size: 27,
+                    size: 26,
                   )
                 ],
                 alignment: Alignment.center,
               ),
-              label: ""),
+              label: ifItIsABigDeviceHome(),
+              ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.notifications,
                 color: ColorPalette().bottomNavigationBarColor,
               ),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-                color: ColorPalette().bottomNavigationBarColor,
-              ),
-              label: "")
+              label: ifItIsABigDeviceNotifications()),
+          
         ],
       ),
     );
@@ -253,68 +218,86 @@ class TopRatedInternships extends StatelessWidget {
   final String nameofJob;
   final String employer;
   final String employerLocation;
-  TopRatedInternships({this.nameofJob, this.employer, this.employerLocation});
+  final String logo;
+  TopRatedInternships({this.nameofJob, this.employer, this.employerLocation, this.logo});
+  
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 15.0),
-        child: Container(
-          padding: const EdgeInsets.only(top: 10, left: 20),
-          width: MediaQuery.of(context).size.width * 1 / 1.2,
-          height: 85,
-          child: Row(children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 40.0, bottom: 10),
-              child: Image.network(
-                  'https://cdn.icon-icons.com/icons2/2119/PNG/512/google_icon_131222.png',
-                  height: 45,
-                  width: 45),
-            ),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Text(
-                  nameofJob,
-                  style: TextStyle(
-                      color: Color(0xff06745A),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: Icon(
-                    Icons.verified,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
-                )
-              ]),
-              Text(
-                employer,
-                style: TextStyle(color: Colors.grey),
-              ),
-              Row(
+    
+    return GestureDetector(
+      onTap: () {
+        appAddModalBottomSheet(context, nameofJob, employer, employerLocation, logo);
+        
+      },
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+                      child: Container(
+                    width: MediaQuery.of(context).size.width * 1 / 1.2,   
+        child: Padding(
+            padding: const EdgeInsets.only(top: 15.0),
+            child: Container(
+              padding: const EdgeInsets.only(top: 10, left: 20),
+              width: MediaQuery.of(context).size.width * 1 / 1.2,
+              height: 100,
+              child: Row(
                 children: [
-                  Icon(
-                    Icons.location_on,
-                    color: Color(0xff759E8B),
+                Padding(
+                  padding: const EdgeInsets.only(right: 40.0, bottom: 10),
+                  child: Image.network(
+                      logo,
+                      height: 45,
+                      width: 45),
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Container(
+                      width: 200,
+                      child: Text(
+                        nameofJob,
+                        softWrap: true,
+                        style: TextStyle(
+                            color: Color(0xff06745A),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Icon(
+                        Icons.verified,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
+                    )
+                  ]),
+                  Text(
+                    employer,
+                    style: TextStyle(color: Colors.grey),
                   ),
-                  Text(employerLocation,
-                      style: TextStyle(color: Color(0xff759E8B)))
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-              )
-            ]),
-          ]),
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-                blurRadius: 5,
-                spreadRadius: 0,
-                offset: Offset(0, 4),
-                color: Colors.grey[300]),
-          ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: Color(0xff759E8B),
+                      ),
+                      Text(employerLocation,
+                          style: TextStyle(color: Color(0xff759E8B)))
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                  )
+                ]),
+              ]),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    blurRadius: 3,
+                    spreadRadius: 0,
+                    offset: Offset(0, 4),
+                    color: Colors.grey[200]),
+              ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
+            ),
         ),
       ),
+          ),
     );
   }
 }
@@ -325,23 +308,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool filterButtonPressed = false;
   @override
   Widget build(BuildContext context) {
+    double determineWidth() {
+    if (MediaQuery.of(context).size.width >= 500) {
+      return 414;
+    
+  } else {
+    return MediaQuery.of(context).size.width * 1 / 1.1;
+  }
+  }
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: [
-      //     Padding(
-      //       padding: const EdgeInsets.only(right: 20.0),
-      //       child: Icon(
-      //         Icons.tune,
-      //         color: ColorPalette().themeColor,
-      //         size: 30,
-      //       ),
-      //     )
-      //   ],
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      // ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -353,61 +331,125 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 20, color: Color(0xff759E8B)),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, bottom: 60),
-                child: Text('Ben Peckham', style: titleTextStyle()),
-              )
+              bigName()
             ]),
-            Container(
-              width: MediaQuery.of(context).size.width * 1 / 1.1,
-              child: Center(
-                child: Stack(alignment: Alignment.center, children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 1 / 1.1,
-                    height: 250,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 5,
-                              spreadRadius: 0,
-                              offset: Offset(0, 4),
-                              color: Colors.grey[400]),
-                        ],
-                        gradient: LinearGradient(
-                            colors: [Color(0xffFAFAFA), Color(0xffFAFAFA)])),
+            SearchBox(),
+    Align(
+      alignment: Alignment.topLeft,
+          child: Padding(
+        padding: const EdgeInsets.only(top: 15.0),
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              filterButtonPressed = !filterButtonPressed;
+            });
+          },
+          child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                              child: Container(
+            width: 100,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: ColorPalette().themeColor
+            ),
+            child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(Icons.filter_alt, color: Colors.white,),
                   ),
-                  Column(children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0, left: 15),
-                        child: Text(
-                          'Top Rated Offers',
-                          style: TextStyle(
-                              color: Color(0xff858585),
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ]),
-                    TopRatedInternships(
-                      nameofJob: "Software Engineering",
-                      employer: "Google",
-                      employerLocation: "Austin, TX",
+                  Text("Filter", style: TextStyle(color: Colors.white),)
+            ],)
+          ),
+              ),
+          SizedBox(width: 100),
+          SizedBox(width: 100),
+          
+          ]
                     ),
-                    TopRatedInternships(
-                      nameofJob: "Pre-Med Program",
-                      employer: "UT Southwestern Medical Center",
-                      employerLocation: "Dallas, TX",
-                    )
-                  ])
-                ]),
+                  ),
+        ),
+      ),
+    ),
+    filterButtonPressed ? 
+    Padding(
+      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 1/1.1,
+        height: 143,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+                BoxShadow(
+                    blurRadius: 3,
+                    spreadRadius: 0,
+                    offset: Offset(0, 4),
+                    color: Colors.grey[200]),
+              ],
+          color: Colors.white
+        ),
+        child: Align(
+          alignment: Alignment.topRight,
+                  child: IconButton(icon: Icon(Icons.close, color: Colors.grey,)
+          , onPressed: () {
+            setState(() {
+              filterButtonPressed = false;
+            });
+          }),
+        ),
+      ),
+    ) : SizedBox(),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Container(
+                width: determineWidth(),
+                child: Center(
+                  child: Stack(alignment: Alignment.center, children: [
+                    Container(
+                      width: determineWidth(),
+                      height: 275,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 2,
+                                spreadRadius: 0,
+                                offset: Offset(0, 4),
+                                color: Colors.grey[300]),
+                          ],
+                          gradient: LinearGradient(
+                              colors: [Color(0xffFAFAFA), Color(0xffFAFAFA)])),
+                    ),
+                    Column(children: [
+                      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0, left: 15),
+                          child: Text(
+                            'Featured Offers',
+                            style: TextStyle(
+                                color: Color(0xff858585),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ]),
+                      featuredOffers(0),
+                      featuredOffers(1)
+                     
+                    ])
+                  ]),
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: ViewAllTopRatedOffersButton(),
             ),
-            CategoriesHome()
+            
+            NewListings()
           ],
         ),
       ),
@@ -415,33 +457,37 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ViewAllTopRatedOffersButton extends StatelessWidget {
+class ViewAllTopRatedOffersButton extends StatefulWidget {
+  @override
+  _ViewAllTopRatedOffersButtonState createState() => _ViewAllTopRatedOffersButtonState();
+}
+
+class _ViewAllTopRatedOffersButtonState extends State<ViewAllTopRatedOffersButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => TopRatedOffersPage()));
+        
       },
       child: Stack(alignment: Alignment.center, children: [
         Container(
           width: MediaQuery.of(context).size.width * 1 / 1.1,
           height: 50,
           decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 5,
-                    spreadRadius: 0,
-                    offset: Offset(0, 4),
-                    color: Colors.grey[400]),
-              ],
+              // boxShadow: [
+              //   BoxShadow(
+              //       blurRadius: 3,
+              //       spreadRadius: 0,
+              //       offset: Offset(0, 4),
+              //       color: Colors.grey[300]),
+              // ],
               borderRadius: BorderRadius.circular(15),
               gradient: LinearGradient(
                   colors: [Color(0xffFAFAFA), Color(0xffFAFAFA)])),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            'View All Top Rated Offers',
+            'View All Featured Offers',
             style: TextStyle(color: Color(0xff858585)),
           ),
           Padding(
@@ -453,3 +499,257 @@ class ViewAllTopRatedOffersButton extends StatelessWidget {
     );
   }
 }
+
+class SearchBox extends StatefulWidget {
+  @override
+  _SearchBoxState createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
+  TextEditingController searchController = new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: Container(
+          height: 50,
+          width: MediaQuery.of(context).size.width * 1/1.2,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 3,
+                  spreadRadius: 0,
+                  offset: Offset(0, 4),
+                  color: Colors.grey[200]),
+            ],
+            color: Colors.white
+          ),
+          child: Row(
+            children: [
+            Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 8, right: 25, bottom: 8),
+                  child: TextField(
+                  cursorHeight: 20,
+                  controller: searchController,
+                  // onSubmitted: () {
+                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => ExtendedSearchPage()));
+                  // },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusColor: ColorPalette().themeColor,
+                    hoverColor: ColorPalette().themeColor,
+                    fillColor: ColorPalette().themeColor,
+                    icon: Icon(Icons.search, color: ColorPalette().themeColor,),
+                    hintText: "Search offers",
+                    enabledBorder: UnderlineInputBorder(      
+    borderSide: BorderSide.none 
+      )
+      )
+                  ),
+              ),
+                ),
+                
+            
+          ],
+          )
+        ),
+      ),
+    );
+  }
+}
+
+class FilterWidget extends StatefulWidget {
+  @override
+  _FilterWidgetState createState() => _FilterWidgetState();
+}
+
+class _FilterWidgetState extends State<FilterWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 40.0),
+        child: Row(
+          children: [
+            Icon(Icons.filter),
+            Text("Filter")
+        ],),
+      )
+    );
+  }
+}
+
+class ProfileDrawer extends StatefulWidget {
+  final String userName;
+  ProfileDrawer({this.userName});
+  @override
+  _ProfileDrawerState createState() => _ProfileDrawerState();
+}
+
+class _ProfileDrawerState extends State<ProfileDrawer> {
+  _launchURL() async {
+ String url = pdfURLForWebUsers;
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+String pdfURLForWebUsers = "https://firebasestorage.googleapis.com/v0/b/internshift2020.appspot.com/o/Akhil_Resume.pdf?alt=media&token=d8f64e22-fa4c-4d56-a2f3-de106984d586";
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').document('nikhilp').snapshots(),
+      builder: (context, snapshot) {
+        
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          String firstName = snapshot.data['firstName'];
+  String lastName = snapshot.data['lastName'];
+  String email = snapshot.data['email'];
+  String school = snapshot.data['school'];
+  
+        String getFirstLetterOfFirstNameandlastname() {
+  
+  String firstLetter = firstName[0];
+  String lastLetter = lastName[0];
+  return firstLetter + lastLetter;
+}
+          return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero, children: [
+            Stack(alignment: Alignment.center, children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 1 / 3.5,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(color: 
+                ColorPalette().themeColor
+                )
+                ,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Container(
+                  height: 175,
+                  width: 175,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(100)),
+                  child: Center(
+                      child: Text(getFirstLetterOfFirstNameandlastname(),
+                          style: TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: 
+                              
+                              ColorPalette().themeColor
+                              ))),
+                ),
+              )
+            ]),
+            ListTile(
+              title: Text(firstName + " " + lastName),
+              leading: Icon(Icons.person),
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_today),
+              title: Text("Age: " + "15"),
+            ),
+            ListTile(
+              title: Text(email),
+              leading: Icon(Icons.email),
+            ),
+            ListTile(
+              leading: Icon(Icons.school),
+              title: Text(school),
+            ),
+            ListTile(
+              leading: Icon(Icons.location_pin),
+              title: Text('Dallas, TX'),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                _launchURL();
+              },
+              leading: Icon(Icons.upload_file),
+              title: Text("View Your Resume"),
+            ),
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text("Edit Profile Information"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage(
+                  image: "https://cdn.icon-icons.com/icons2/2119/PNG/512/google_icon_131222.png",
+                  userName: "user",
+                  firstName: "firstName",
+                  lastName: "lastName",
+                  school: "TAG",
+                  password: "password",
+                  email: "aaoifjeiofj",
+                )));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Log Out"),
+              onTap: () {
+                AuthMethods().signOut();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage()));
+              },
+            ),
+            
+          ]
+          ),
+        );
+        }
+    
+  });
+  }}
+
+  Widget bigName() {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').document('akhilpeddikuppa').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          String firstName = snapshot.data['firstName'];
+          String lastName = snapshot.data['lastName'];
+          return Padding(
+                padding: const EdgeInsets.only(left: 20.0, bottom: 50),
+                child: Text(firstName + " " + lastName, style: titleTextStyle()),
+              );
+        }
+      }
+    );
+  }
+
+  Widget featuredOffers(int index) {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('featuredoffers').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          
+          String nameOfJob = snapshot.data.documents[index]['nameOfJob'];
+          String employer = snapshot.data.documents[index]['employer'];
+          String employerLocation = snapshot.data.documents[index]['employerLocation'];
+          String logo = snapshot.data.documents[index]['logo'];
+          return TopRatedInternships(
+                        nameofJob: nameOfJob,
+                        employer: employer,
+                        employerLocation: employerLocation,
+                        logo: logo,
+                      );
+        }
+      },
+    );
+  }
