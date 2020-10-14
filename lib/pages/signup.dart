@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:internshift/constants.dart';
 import 'package:internshift/functions/auth.dart';
 import 'package:internshift/functions/database.dart';
+import 'package:internshift/functions/functions.dart';
 import 'package:internshift/functions/helperfunctions.dart';
 import 'package:internshift/main.dart';
 import 'package:internshift/pages/signin.dart';
@@ -318,6 +319,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                                   child: RaisedButton(
                                     color: Color(0xff5FBA94),
     onPressed: () {
+     
         DatePicker.showDatePicker(
           context,
                               showTitleActions: true,
@@ -325,6 +327,8 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                               maxTime: DateTime.now(), 
                                onConfirm: (date) {
                             print('confirm $date');
+                            print(calculateAge(date));
+                            
                           }, 
                           currentTime: DateTime.now(), 
                           locale: LocaleType.en);
