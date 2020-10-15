@@ -743,7 +743,7 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(
                             top: 8.0, left: 8, right: 25, bottom: 8),
-                        //TODO: SearchBox
+                       
                         child: TextField(
                             cursorHeight: 20,
                             controller: otherTextEditingController,
@@ -779,7 +779,7 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
             name != "" && name != null
                 ? Firestore.instance
                     .collection('offers')
-                    .where("searchKey", isEqualTo: name)
+                    .where("searchKey", isEqualTo: name.substring(0,1))
                     .snapshots()
                 : Firestore.instance.collection("offers").snapshots(),
                 builder: (context, snapshot) {
@@ -865,7 +865,7 @@ class _MainPageSearchBoxState extends State<MainPageSearchBox> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         top: 8.0, left: 8, right: 25, bottom: 8),
-                    //TODO: SearchBox
+                
                     child: TextField(
                         cursorHeight: 20,
                         controller: searchController,
