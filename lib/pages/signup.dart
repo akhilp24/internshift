@@ -217,6 +217,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
   TextEditingController locationTextEditingController =
       new TextEditingController();
   bool isLoading = false;
+  int age;
   String user;
   signMeUp() async {
     if (formKey.currentState.validate()) {
@@ -235,6 +236,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
             "lastName": lastNameTextEditingController.text,
             "email": widget.email,
             "school": schoolTextEditingController.text,
+            "age": age.toString()
           };
 
           DatabaseMethods().uploadUserInfo(userInfoMap, widget.username);
@@ -312,35 +314,29 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                                 controller: schoolTextEditingController,
                                 style: simpleTextFieldStyle(),
                                 autocorrect: false,
-                                decoration: textFieldInputDecoration("School")
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: RaisedButton(
-                                    color: Color(0xff5FBA94),
-    onPressed: () {
-     
-        DatePicker.showDatePicker(
-          context,
-                              showTitleActions: true,
-                              minTime: DateTime(1998, 1, 1),
-                              maxTime: DateTime.now(), 
-                               onConfirm: (date) {
-                            print('confirm $date');
-                            print(calculateAge(date));
-                            
-                          },
-                          currentTime: DateTime.now(), 
-                          locale: LocaleType.en);
-    },
-    child: Text(
-        'Enter your age',
-        style: TextStyle(color: Colors.white),
-    )
-    ),
-                                )
-                          ]
-                          ),
+                                decoration: textFieldInputDecoration("School")),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: RaisedButton(
+                                  color: Color(0xff5FBA94),
+                                  onPressed: () {
+                                    DatePicker.showDatePicker(context,
+                                        showTitleActions: true,
+                                        minTime: DateTime(1998, 1, 1),
+                                        maxTime: DateTime.now(),
+                                        onConfirm: (date) {
+                                      print('confirm $date');
+                                      age = calculateAge(date);
+                                    },
+                                        currentTime: DateTime.now(),
+                                        locale: LocaleType.en);
+                                  },
+                                  child: Text(
+                                    'Enter your age',
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                            )
+                          ]),
                         ),
                         SizedBox(height: 8),
                         //
