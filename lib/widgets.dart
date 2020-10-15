@@ -20,17 +20,17 @@ class _NewListingsState extends State<NewListings> {
           Center(
             child: Container(
               width: MediaQuery.of(context).size.width * 1 / 1.1,
-              height: 550,
+              // height: 550,
               decoration: BoxDecoration(
                 color: Color(0xffFAFAFA),
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 3,
-                      spreadRadius: 0,
-                      offset: Offset(0, 4),
-                      color: Colors.grey[200]),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //       blurRadius: 3,
+                //       spreadRadius: 0,
+                //       offset: Offset(0, 4),
+                //       color: Colors.grey[200]),
+                // ],
               ),
               child: Padding(
                 padding: const EdgeInsets.only(top: 20.0, left: 20),

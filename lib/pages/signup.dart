@@ -323,7 +323,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                                     DatePicker.showDatePicker(context,
                                         showTitleActions: true,
                                         minTime: DateTime(1998, 1, 1),
-                                        maxTime: DateTime.now(),
+                                        maxTime: DateTime(2007, 1, 1),
                                         onConfirm: (date) {
                                       print('confirm $date');
                                       age = calculateAge(date);

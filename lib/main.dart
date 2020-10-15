@@ -443,20 +443,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget buildResultCard(data) {
-  return Card(
-      elevation: 2.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      child: Container(
-          child: Center(
-        child: Text(
-          data['nameofoffer'],
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black, fontSize: 20),
-        ),
-      )));
-}
-
 class ViewAllTopRatedOffersButton extends StatefulWidget {
   @override
   _ViewAllTopRatedOffersButtonState createState() =>
@@ -702,11 +688,14 @@ class OtherSearchPage extends StatefulWidget {
 }
 
 class _OtherSearchPageState extends State<OtherSearchPage> {
+  TextEditingController otherTextEditingController =
+      new TextEditingController();
   var queryResultSet = [];
   var tempSearchStore = [];
   void initState() {
-    super.initState();
     initiateSearch(widget.val);
+    super.initState();
+
     print(widget.val);
   }
 
@@ -755,14 +744,63 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
         ),
       ),
       body: Column(children: [
-        OtherPageSearchBox(),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 0.0),
+            child: Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width * 1 / 1.2,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 3,
+                          spreadRadius: 0,
+                          offset: Offset(0, 4),
+                          color: Colors.grey[200]),
+                    ],
+                    color: Colors.white),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 8.0, left: 8, right: 25, bottom: 8),
+                        //TODO: SearchBox
+                        child: TextField(
+                            cursorHeight: 20,
+                            controller: otherTextEditingController,
+                            onSubmitted: (value) {
+                              print(value);
+                              initiateSearch(value);
+                            },
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusColor: ColorPalette().themeColor,
+                                hoverColor: ColorPalette().themeColor,
+                                fillColor: ColorPalette().themeColor,
+                                icon: Icon(
+                                  Icons.search,
+                                  color: ColorPalette().themeColor,
+                                ),
+                                hintText: "Search offers",
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide.none))),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        ),
         GridView.count(
-            crossAxisCount: 2,
-            primary: false,
-            shrinkWrap: true,
-            children: tempSearchStore.map((element) {
-              return buildResultCard(element);
-            }).toList())
+          crossAxisCount: 2,
+          primary: false,
+          shrinkWrap: true,
+          children: tempSearchStore.map((element) {
+                return buildResultCard(element);
+              })?.toList() ??
+              [],
+        )
       ]),
     );
   }
@@ -834,68 +872,16 @@ class _MainPageSearchBoxState extends State<MainPageSearchBox> {
   }
 }
 
-class OtherPageSearchBox extends StatefulWidget {
-  @override
-  _OtherPageSearchBoxState createState() => _OtherPageSearchBoxState();
-}
-
-class _OtherPageSearchBoxState extends State<OtherPageSearchBox> {
-  TextEditingController otherTextEditingController =
-      new TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 0.0),
-        child: Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width * 1 / 1.2,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 3,
-                      spreadRadius: 0,
-                      offset: Offset(0, 4),
-                      color: Colors.grey[200]),
-                ],
-                color: Colors.white),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 8.0, left: 8, right: 25, bottom: 8),
-                    //TODO: SearchBox
-                    child: TextField(
-                        cursorHeight: 20,
-                        controller: otherTextEditingController,
-                        onSubmitted: (value) {
-                          print(value);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OtherSearchPage(
-                                        val: value,
-                                      )));
-                        },
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusColor: ColorPalette().themeColor,
-                            hoverColor: ColorPalette().themeColor,
-                            fillColor: ColorPalette().themeColor,
-                            icon: Icon(
-                              Icons.search,
-                              color: ColorPalette().themeColor,
-                            ),
-                            hintText: "Search offers",
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none))),
-                  ),
-                ),
-              ],
-            )),
-      ),
-    );
-  }
+Widget buildResultCard(data) {
+  return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      child: Container(
+          child: Center(
+        child: Text(
+          data['nameofoffer'],
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+      )));
 }
