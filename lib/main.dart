@@ -596,7 +596,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
             String school = snapshot.data['school'];
             String age = snapshot.data['age'];
 
-            String getFirstLetterOfFirstNameandlastname() {
+            String getFirstLetterOfFirstNameAndLastName() {
               String firstLetter = firstName[0];
               String lastLetter = lastName[0];
               return firstLetter + lastLetter;
@@ -619,7 +619,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(100)),
                       child: Center(
-                          child: Text(getFirstLetterOfFirstNameandlastname(),
+                          child: Text(getFirstLetterOfFirstNameAndLastName(),
                               style: TextStyle(
                                   fontSize: 48,
                                   fontWeight: FontWeight.bold,
