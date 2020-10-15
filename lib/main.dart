@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,11 +12,6 @@ import 'constants.dart';
 import 'functions/functions.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'functions/helperfunctions.dart';
-
-
-
-
-
 
 void main() {
   runApp(MyApp());
@@ -50,7 +44,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'InternShift',
-      home: userIsLoggedIn ? MainPage(): SignInPage(),
+      home: userIsLoggedIn ? MainPage() : SignInPage(),
     );
   }
 }
@@ -63,8 +57,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  
-  
   int currentIndex = 1;
   @override
   void initState() {
@@ -72,48 +64,40 @@ class _MainPageState extends State<MainPage> {
     print(HelperFunctions.getUserNameSharedPreference().toString());
   }
 
-  
-  
   final _children = [
-    
     Saved(),
     HomePage(),
     NotificationsPage(),
-    
   ];
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;
     });
   }
- 
-  
+
   String ifItIsABigDeviceHome() {
     if (MediaQuery.of(context).size.width > 500) {
       return "Home";
-  } else {
-    return "";
-  }
+    } else {
+      return "";
+    }
   }
 
   String ifItIsABigDeviceSaved() {
     if (MediaQuery.of(context).size.width > 500) {
       return "Saved";
-  } else {
-    return "";
+    } else {
+      return "";
+    }
   }
-  }
-
 
   String ifItIsABigDeviceNotifications() {
     if (MediaQuery.of(context).size.width > 500) {
       return "Notifications";
-  } else {
-    return "";
+    } else {
+      return "";
+    }
   }
-  }
-
-  
 
   bool forPDFIfThereIsBigScreen = false;
   void getScreenSizeAnddecideLinkLaunchingMethod() {
@@ -124,15 +108,12 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-
-  
-
-  
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      endDrawer: ProfileDrawer(userName: widget.userName,),
+      endDrawer: ProfileDrawer(
+        userName: widget.userName,
+      ),
       drawerEnableOpenDragGesture: true,
       appBar: AppBar(
         actions: [
@@ -144,7 +125,7 @@ class _MainPageState extends State<MainPage> {
                   onTap: () => Scaffold.of(context).openEndDrawer(),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
-                      child: Icon(
+                    child: Icon(
                       // Icons.tune,
                       Icons.account_circle,
                       color: Color(0xff5FBA94),
@@ -166,7 +147,6 @@ class _MainPageState extends State<MainPage> {
         currentIndex: currentIndex,
         onTap: onTabTapped,
         items: [
-          
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.bookmark,
@@ -174,40 +154,38 @@ class _MainPageState extends State<MainPage> {
               ),
               label: ifItIsABigDeviceSaved()),
           BottomNavigationBarItem(
-              icon: Stack(
-                children: [
-                  Container(
-                    
-                    height: 52,
-                    width: 52,
-                    decoration: BoxDecoration(
+            icon: Stack(
+              children: [
+                Container(
+                  height: 52,
+                  width: 52,
+                  decoration: BoxDecoration(
                       boxShadow: [
-              BoxShadow(
-                  blurRadius: 3,
-                  spreadRadius: 0,
-                  offset: Offset(1, 1),
-                  color: Colors.grey[400]),
-            ],
-                        color: Color(0xff5FBA94),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 26,
-                  )
-                ],
-                alignment: Alignment.center,
-              ),
-              label: ifItIsABigDeviceHome(),
-              ),
+                        BoxShadow(
+                            blurRadius: 3,
+                            spreadRadius: 0,
+                            offset: Offset(1, 1),
+                            color: Colors.grey[400]),
+                      ],
+                      color: Color(0xff5FBA94),
+                      borderRadius: BorderRadius.circular(20)),
+                ),
+                Icon(
+                  Icons.home,
+                  color: Colors.white,
+                  size: 26,
+                )
+              ],
+              alignment: Alignment.center,
+            ),
+            label: ifItIsABigDeviceHome(),
+          ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.notifications,
                 color: ColorPalette().bottomNavigationBarColor,
               ),
               label: ifItIsABigDeviceNotifications()),
-          
         ],
       ),
     );
@@ -215,45 +193,41 @@ class _MainPageState extends State<MainPage> {
 }
 
 class TopRatedInternships extends StatelessWidget {
-  final String nameofJob;
+  final String nameOfJob;
   final String employer;
   final String employerLocation;
   final String logo;
-  TopRatedInternships({this.nameofJob, this.employer, this.employerLocation, this.logo});
-  
+  TopRatedInternships(
+      {this.nameOfJob, this.employer, this.employerLocation, this.logo});
+
   @override
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       onTap: () {
-        appAddModalBottomSheet(context, nameofJob, employer, employerLocation, logo);
-        
+        appAddModalBottomSheet(
+            context, nameOfJob, employer, employerLocation, logo);
       },
-          child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-                      child: Container(
-                    width: MediaQuery.of(context).size.width * 1 / 1.2,   
-        child: Padding(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 1 / 1.2,
+          child: Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: Container(
               padding: const EdgeInsets.only(top: 10, left: 20),
               width: MediaQuery.of(context).size.width * 1 / 1.2,
               height: 100,
-              child: Row(
-                children: [
+              child: Row(children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 40.0, bottom: 10),
-                  child: Image.network(
-                      logo,
-                      height: 45,
-                      width: 45),
+                  child: Image.network(logo, height: 45, width: 45),
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
                     Container(
                       width: 200,
                       child: Text(
-                        nameofJob,
+                        nameOfJob,
                         softWrap: true,
                         style: TextStyle(
                             color: Color(0xff06745A),
@@ -295,9 +269,9 @@ class TopRatedInternships extends StatelessWidget {
                     color: Colors.grey[200]),
               ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
             ),
+          ),
         ),
       ),
-          ),
     );
   }
 }
@@ -312,13 +286,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double determineWidth() {
-    if (MediaQuery.of(context).size.width >= 500) {
-      return 414;
-    
-  } else {
-    return MediaQuery.of(context).size.width * 1 / 1.1;
-  }
-  }
+      if (MediaQuery.of(context).size.width >= 500) {
+        return 414;
+      } else {
+        return MediaQuery.of(context).size.width * 1 / 1.1;
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -334,75 +308,83 @@ class _HomePageState extends State<HomePage> {
               bigName()
             ]),
             SearchBox(),
-    Align(
-      alignment: Alignment.topLeft,
-          child: Padding(
-        padding: const EdgeInsets.only(top: 15.0),
-        child: GestureDetector(
-          onTap: () {
-            setState(() {
-              filterButtonPressed = !filterButtonPressed;
-            });
-          },
-          child: Center(
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      filterButtonPressed = !filterButtonPressed;
+                    });
+                  },
+                  child: Center(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                              child: Container(
-            width: 100,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: ColorPalette().themeColor
-            ),
-            child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Icon(Icons.filter_alt, color: Colors.white,),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: ColorPalette().themeColor),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Icon(
+                                        Icons.filter_alt,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Filter",
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  ],
+                                )),
+                          ),
+                          SizedBox(width: 100),
+                          SizedBox(width: 100),
+                        ]),
                   ),
-                  Text("Filter", style: TextStyle(color: Colors.white),)
-            ],)
-          ),
+                ),
               ),
-          SizedBox(width: 100),
-          SizedBox(width: 100),
-          
-          ]
+            ),
+            filterButtonPressed
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 1 / 1.1,
+                      height: 143,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 3,
+                                spreadRadius: 0,
+                                offset: Offset(0, 4),
+                                color: Colors.grey[200]),
+                          ],
+                          color: Colors.white),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                filterButtonPressed = false;
+                              });
+                            }),
+                      ),
                     ),
-                  ),
-        ),
-      ),
-    ),
-    filterButtonPressed ? 
-    Padding(
-      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 1/1.1,
-        height: 143,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-                BoxShadow(
-                    blurRadius: 3,
-                    spreadRadius: 0,
-                    offset: Offset(0, 4),
-                    color: Colors.grey[200]),
-              ],
-          color: Colors.white
-        ),
-        child: Align(
-          alignment: Alignment.topRight,
-                  child: IconButton(icon: Icon(Icons.close, color: Colors.grey,)
-          , onPressed: () {
-            setState(() {
-              filterButtonPressed = false;
-            });
-          }),
-        ),
-      ),
-    ) : SizedBox(),
+                  )
+                : SizedBox(),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
@@ -425,20 +407,22 @@ class _HomePageState extends State<HomePage> {
                               colors: [Color(0xffFAFAFA), Color(0xffFAFAFA)])),
                     ),
                     Column(children: [
-                      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0, left: 15),
-                          child: Text(
-                            'Featured Offers',
-                            style: TextStyle(
-                                color: Color(0xff858585),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 5.0, left: 15),
+                              child: Text(
+                                'Featured Offers',
+                                style: TextStyle(
+                                    color: Color(0xff858585),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ]),
                       featuredOffers(0),
                       featuredOffers(1)
-                     
                     ])
                   ]),
                 ),
@@ -448,7 +432,6 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(top: 15.0),
               child: ViewAllTopRatedOffersButton(),
             ),
-            
             NewListings()
           ],
         ),
@@ -459,16 +442,16 @@ class _HomePageState extends State<HomePage> {
 
 class ViewAllTopRatedOffersButton extends StatefulWidget {
   @override
-  _ViewAllTopRatedOffersButtonState createState() => _ViewAllTopRatedOffersButtonState();
+  _ViewAllTopRatedOffersButtonState createState() =>
+      _ViewAllTopRatedOffersButtonState();
 }
 
-class _ViewAllTopRatedOffersButtonState extends State<ViewAllTopRatedOffersButton> {
+class _ViewAllTopRatedOffersButtonState
+    extends State<ViewAllTopRatedOffersButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        
-      },
+      onTap: () {},
       child: Stack(alignment: Alignment.center, children: [
         Container(
           width: MediaQuery.of(context).size.width * 1 / 1.1,
@@ -513,49 +496,46 @@ class _SearchBoxState extends State<SearchBox> {
       child: Padding(
         padding: const EdgeInsets.only(top: 0.0),
         child: Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width * 1/1.2,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 3,
-                  spreadRadius: 0,
-                  offset: Offset(0, 4),
-                  color: Colors.grey[200]),
-            ],
-            color: Colors.white
-          ),
-          child: Row(
-            children: [
-            Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8, right: 25, bottom: 8),
-                  child: TextField(
-                  cursorHeight: 20,
-                  controller: searchController,
-                  // onSubmitted: () {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => ExtendedSearchPage()));
-                  // },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusColor: ColorPalette().themeColor,
-                    hoverColor: ColorPalette().themeColor,
-                    fillColor: ColorPalette().themeColor,
-                    icon: Icon(Icons.search, color: ColorPalette().themeColor,),
-                    hintText: "Search offers",
-                    enabledBorder: UnderlineInputBorder(      
-    borderSide: BorderSide.none 
-      )
-      )
+            height: 50,
+            width: MediaQuery.of(context).size.width * 1 / 1.2,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 3,
+                      spreadRadius: 0,
+                      offset: Offset(0, 4),
+                      color: Colors.grey[200]),
+                ],
+                color: Colors.white),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, left: 8, right: 25, bottom: 8),
+                    child: TextField(
+                        cursorHeight: 20,
+                        controller: searchController,
+                        // onSubmitted: () {
+                        //   Navigator.push(context, MaterialPageRoute(builder: (context) => ExtendedSearchPage()));
+                        // },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusColor: ColorPalette().themeColor,
+                            hoverColor: ColorPalette().themeColor,
+                            fillColor: ColorPalette().themeColor,
+                            icon: Icon(
+                              Icons.search,
+                              color: ColorPalette().themeColor,
+                            ),
+                            hintText: "Search offers",
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide.none))),
                   ),
-              ),
                 ),
-                
-            
-          ],
-          )
-        ),
+              ],
+            )),
       ),
     );
   }
@@ -570,15 +550,12 @@ class _FilterWidgetState extends State<FilterWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 40.0),
-        child: Row(
-          children: [
-            Icon(Icons.filter),
-            Text("Filter")
-        ],),
-      )
-    );
+        child: Padding(
+      padding: const EdgeInsets.only(bottom: 40.0),
+      child: Row(
+        children: [Icon(Icons.filter), Text("Filter")],
+      ),
+    ));
   }
 }
 
@@ -591,131 +568,135 @@ class ProfileDrawer extends StatefulWidget {
 
 class _ProfileDrawerState extends State<ProfileDrawer> {
   _launchURL() async {
- String url = pdfURLForWebUsers;
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+    String url = pdfURLForWebUsers;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
-}
-String pdfURLForWebUsers = "https://firebasestorage.googleapis.com/v0/b/internshift2020.appspot.com/o/Akhil_Resume.pdf?alt=media&token=d8f64e22-fa4c-4d56-a2f3-de106984d586";
+
+  String pdfURLForWebUsers =
+      "https://firebasestorage.googleapis.com/v0/b/internshift2020.appspot.com/o/Akhil_Resume.pdf?alt=media&token=d8f64e22-fa4c-4d56-a2f3-de106984d586";
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('users').document('nikhilp').snapshots(),
-      builder: (context, snapshot) {
-        
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        } else {
-          String firstName = snapshot.data['firstName'];
-  String lastName = snapshot.data['lastName'];
-  String email = snapshot.data['email'];
-  String school = snapshot.data['school'];
-  
-        String getFirstLetterOfFirstNameandlastname() {
-  
-  String firstLetter = firstName[0];
-  String lastLetter = lastName[0];
-  return firstLetter + lastLetter;
-}
-          return Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero, children: [
-            Stack(alignment: Alignment.center, children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 1 / 3.5,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: 
-                ColorPalette().themeColor
-                )
-                ,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Container(
-                  height: 175,
-                  width: 175,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100)),
-                  child: Center(
-                      child: Text(getFirstLetterOfFirstNameandlastname(),
-                          style: TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: 
-                              
-                              ColorPalette().themeColor
-                              ))),
-                ),
-              )
-            ]),
-            ListTile(
-              title: Text(firstName + " " + lastName),
-              leading: Icon(Icons.person),
-            ),
-            ListTile(
-              leading: Icon(Icons.calendar_today),
-              title: Text("Age: " + "15"),
-            ),
-            ListTile(
-              title: Text(email),
-              leading: Icon(Icons.email),
-            ),
-            ListTile(
-              leading: Icon(Icons.school),
-              title: Text(school),
-            ),
-            ListTile(
-              leading: Icon(Icons.location_pin),
-              title: Text('Dallas, TX'),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.pop(context);
-                _launchURL();
-              },
-              leading: Icon(Icons.upload_file),
-              title: Text("View Your Resume"),
-            ),
-            ListTile(
-              leading: Icon(Icons.edit),
-              title: Text("Edit Profile Information"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage(
-                  image: "https://cdn.icon-icons.com/icons2/2119/PNG/512/google_icon_131222.png",
-                  userName: "user",
-                  firstName: "firstName",
-                  lastName: "lastName",
-                  school: "TAG",
-                  password: "password",
-                  email: "aaoifjeiofj",
-                )));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Log Out"),
-              onTap: () {
-                AuthMethods().signOut();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage()));
-              },
-            ),
-            
-          ]
-          ),
-        );
-        }
-    
-  });
-  }}
+        stream: Firestore.instance
+            .collection('users')
+            .document('akhilp24')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            String firstName = snapshot.data['firstName'];
+            String lastName = snapshot.data['lastName'];
+            String email = snapshot.data['email'];
+            String school = snapshot.data['school'];
+            String age = snapshot.data['age'];
 
-  Widget bigName() {
-    return StreamBuilder(
-      stream: Firestore.instance.collection('users').document('akhilpeddikuppa').snapshots(),
+            String getFirstLetterOfFirstNameandlastname() {
+              String firstLetter = firstName[0];
+              String lastLetter = lastName[0];
+              return firstLetter + lastLetter;
+            }
+
+            return Drawer(
+              child: ListView(padding: EdgeInsets.zero, children: [
+                Stack(alignment: Alignment.center, children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 1 / 3.5,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(color: ColorPalette().themeColor),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Container(
+                      height: 175,
+                      width: 175,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100)),
+                      child: Center(
+                          child: Text(getFirstLetterOfFirstNameandlastname(),
+                              style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorPalette().themeColor))),
+                    ),
+                  )
+                ]),
+                ListTile(
+                  title: Text(firstName + " " + lastName),
+                  leading: Icon(Icons.person),
+                ),
+                ListTile(
+                  leading: Icon(Icons.calendar_today),
+                  title: Text("Age: " + age),
+                ),
+                ListTile(
+                  title: Text(email),
+                  leading: Icon(Icons.email),
+                ),
+                ListTile(
+                  leading: Icon(Icons.school),
+                  title: Text(school),
+                ),
+                ListTile(
+                  leading: Icon(Icons.location_pin),
+                  title: Text('Dallas, TX'),
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.pop(context);
+                    _launchURL();
+                  },
+                  leading: Icon(Icons.upload_file),
+                  title: Text("View Your Resume"),
+                ),
+                ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text("Edit Profile Information"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsPage(
+                                  image:
+                                      "https://cdn.icon-icons.com/icons2/2119/PNG/512/google_icon_131222.png",
+                                  userName: "user",
+                                  firstName: "firstName",
+                                  lastName: "lastName",
+                                  school: "TAG",
+                                  password: "password",
+                                  email: "aaoifjeiofj",
+                                )));
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text("Log Out"),
+                  onTap: () {
+                    AuthMethods().signOut();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => SignInPage()));
+                  },
+                ),
+              ]),
+            );
+          }
+        });
+  }
+}
+
+Widget bigName() {
+  return StreamBuilder(
+      stream: Firestore.instance
+          .collection('users')
+          .document('akhilpeddikuppa')
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
@@ -723,33 +704,32 @@ String pdfURLForWebUsers = "https://firebasestorage.googleapis.com/v0/b/internsh
           String firstName = snapshot.data['firstName'];
           String lastName = snapshot.data['lastName'];
           return Padding(
-                padding: const EdgeInsets.only(left: 20.0, bottom: 50),
-                child: Text(firstName + " " + lastName, style: titleTextStyle()),
-              );
+            padding: const EdgeInsets.only(left: 20.0, bottom: 50),
+            child: Text(firstName + " " + lastName, style: titleTextStyle()),
+          );
         }
-      }
-    );
-  }
+      });
+}
 
-  Widget featuredOffers(int index) {
-    return StreamBuilder(
-      stream: Firestore.instance.collection('featuredoffers').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        } else {
-          
-          String nameOfJob = snapshot.data.documents[index]['nameOfJob'];
-          String employer = snapshot.data.documents[index]['employer'];
-          String employerLocation = snapshot.data.documents[index]['employerLocation'];
-          String logo = snapshot.data.documents[index]['logo'];
-          return TopRatedInternships(
-                        nameofJob: nameOfJob,
-                        employer: employer,
-                        employerLocation: employerLocation,
-                        logo: logo,
-                      );
-        }
-      },
-    );
-  }
+Widget featuredOffers(int index) {
+  return StreamBuilder(
+    stream: Firestore.instance.collection('featuredoffers').snapshots(),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return Center(child: CircularProgressIndicator());
+      } else {
+        String nameOfJob = snapshot.data.documents[index]['nameOfJob'];
+        String employer = snapshot.data.documents[index]['employer'];
+        String employerLocation =
+            snapshot.data.documents[index]['employerLocation'];
+        String logo = snapshot.data.documents[index]['logo'];
+        return TopRatedInternships(
+          nameOfJob: nameOfJob,
+          employer: employer,
+          employerLocation: employerLocation,
+          logo: logo,
+        );
+      }
+    },
+  );
+}
