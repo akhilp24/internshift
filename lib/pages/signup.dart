@@ -329,7 +329,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
                             print('confirm $date');
                             print(calculateAge(date));
                             
-                          }, 
+                          },
                           currentTime: DateTime.now(), 
                           locale: LocaleType.en);
     },
