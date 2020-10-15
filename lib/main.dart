@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:internshift/functions/auth.dart';
+import 'package:internshift/functions/searchservice.dart';
 
 import 'package:internshift/pages/navigationbarmainpages/notificationspage.dart';
 import 'package:internshift/pages/navigationbarmainpages/profilepage.dart';
@@ -490,6 +491,36 @@ class SearchBox extends StatefulWidget {
 
 class _SearchBoxState extends State<SearchBox> {
   TextEditingController searchController = new TextEditingController();
+  var queryResultSet = [];
+  var tempSearchStore = [];
+  initiateSearch(value) {
+    if (value.length == 0) {
+      setState(() {
+        queryResultSet = [];
+        tempSearchStore = [];
+      });
+    }
+
+    var capitalizedValue =
+        value.substring(0, 1).toUpperCase() + value.substring(1);
+    if (queryResultSet.length == 0 && value.length == 1) {
+      SearchService().searchByName(value).then((QuerySnapshot docs) {
+        for (int i = 0; i < docs.documents.length; ++i) {
+          queryResultSet.add(docs.documents[i].data);
+        }
+      });
+    } else {
+      tempSearchStore = [];
+      queryResultSet.forEach((element) {
+        if (element['nameofoffer'].startsWith(capitalizedValue)) {
+          setState(() {
+            tempSearchStore.add(element);
+          });
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -517,9 +548,9 @@ class _SearchBoxState extends State<SearchBox> {
                     child: TextField(
                         cursorHeight: 20,
                         controller: searchController,
-                        // onSubmitted: () {
-                        //   Navigator.push(context, MaterialPageRoute(builder: (context) => ExtendedSearchPage()));
-                        // },
+                        onChanged: (val) {
+                          initiateSearch(val);
+                        },
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             focusColor: ColorPalette().themeColor,
