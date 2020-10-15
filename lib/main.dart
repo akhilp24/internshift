@@ -797,16 +797,48 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
                         itemCount: snapshot.data.documents.length,
                         itemBuilder: (context, i) {
                           DocumentSnapshot rsnapshot = snapshot.data.documents[i];
-                          return Card(
+                          return GestureDetector(
+                              onTap: () {
+                                appAddModalBottomSheet(context, rsnapshot.data['nameofoffer'], rsnapshot.data['employer'], rsnapshot.data['location'], rsnapshot.data['logo']);
+                              },
+                                                          child: Card(
+                                elevation: 1,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
-                                child: Container(
-                                    child: Center(
-                                        child:
-                                            Text(rsnapshot.data["nameofoffer"])),
-                                    width: 100),
-                                elevation: 1,
-                              );
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Column(
+                                    
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 36,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage: NetworkImage(rsnapshot.data['logo'])
+                                      ),
+                                      Container(
+                                        width: 125,
+                                      child: Text(
+                                        rsnapshot.data["nameofoffer"],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    
+                                    children: [
+                                      Text(rsnapshot.data['employer']),
+                                      Text(rsnapshot.data['location'])
+                                    ]
+                                  )
+                                  
+                                    ]
+                                  ),
+                                )
+                                
+                              ),
+                            );
                         },
                       ),
                     );

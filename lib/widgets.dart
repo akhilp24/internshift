@@ -66,15 +66,47 @@ class _NewListingsState extends State<NewListings> {
                           itemBuilder: (BuildContext context, int index) {
                             DocumentSnapshot bsnapshot =
                                 snapshot.data.documents[index];
-                            return Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Container(
-                                  child: Center(
-                                      child:
-                                          Text(bsnapshot.data["nameofoffer"])),
-                                  width: 100),
-                              elevation: 1,
+                            return GestureDetector(
+                              onTap: () {
+                                appAddModalBottomSheet(context, bsnapshot.data['nameofoffer'], bsnapshot.data['employer'], bsnapshot.data['location'], bsnapshot.data['logo']);
+                              },
+                                                          child: Card(
+                                elevation: 1,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Column(
+                                    
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 36,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage: NetworkImage(bsnapshot.data['logo'])
+                                      ),
+                                      Container(
+                                        width: 125,
+                                      child: Text(
+                                        bsnapshot.data["nameofoffer"],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    
+                                    children: [
+                                      Text(bsnapshot.data['employer']),
+                                      Text(bsnapshot.data['location'])
+                                    ]
+                                  )
+                                  
+                                    ]
+                                  ),
+                                )
+                                
+                              ),
                             );
                           },
                         ),
