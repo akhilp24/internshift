@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/rendering.dart';
 
-import 'main.dart';
 
 class NewListings extends StatefulWidget {
   @override

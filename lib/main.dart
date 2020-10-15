@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:internshift/functions/auth.dart';
-import 'package:internshift/functions/searchservice.dart';
 
 import 'package:internshift/pages/navigationbarmainpages/notificationspage.dart';
-import 'package:internshift/pages/navigationbarmainpages/profilepage.dart';
 import 'package:internshift/pages/navigationbarmainpages/savedopenings.dart';
 import 'package:internshift/pages/signin.dart';
 import 'package:internshift/widgets.dart';
@@ -690,42 +688,21 @@ class OtherSearchPage extends StatefulWidget {
 class _OtherSearchPageState extends State<OtherSearchPage> {
   TextEditingController otherTextEditingController =
       new TextEditingController();
-  var queryResultSet = [];
-  var tempSearchStore = [];
+  String name = "";
+  
   void initState() {
-    initiateSearch(widget.val);
+    if(widget.val != null) {
+      setState(() {
+      name = widget.val.toLowerCase().trim();
+    });
+    }
+    
     super.initState();
 
-    print(widget.val);
+    
   }
-
-  initiateSearch(value) {
-    if (value.length == 0) {
-      setState(() {
-        queryResultSet = [];
-        tempSearchStore = [];
-      });
-    }
-
-    var capitalizedValue =
-        value.substring(0, 1).toUpperCase() + value.substring(1);
-    if (queryResultSet.length == 0 && value.length == 1) {
-      SearchService().searchByName(value).then((QuerySnapshot docs) {
-        for (int i = 0; i < docs.documents.length; ++i) {
-          queryResultSet.add(docs.documents[i].data);
-        }
-      });
-    } else {
-      tempSearchStore = [];
-      queryResultSet.forEach((element) {
-        if (element['nameofoffer'].startsWith(capitalizedValue)) {
-          setState(() {
-            tempSearchStore.add(element);
-          });
-        }
-      });
-    }
-  }
+  
+  
 
   @override
   Widget build(BuildContext context) {
@@ -770,9 +747,12 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
                         child: TextField(
                             cursorHeight: 20,
                             controller: otherTextEditingController,
-                            onSubmitted: (value) {
+                            onChanged: (value) {
+                              
+                              setState(() {
+      name = value.toLowerCase();
+    });
                               print(value);
-                              initiateSearch(value);
                             },
                             decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -792,14 +772,61 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
                 )),
           ),
         ),
-        GridView.count(
-          crossAxisCount: 2,
-          primary: false,
-          shrinkWrap: true,
-          children: tempSearchStore.map((element) {
-                return buildResultCard(element);
-              })?.toList() ??
-              [],
+        Expanded(
+         
+          child: StreamBuilder(
+            stream: 
+            name != "" && name != null
+                ? Firestore.instance
+                    .collection('offers')
+                    .where("searchKey", isEqualTo: name)
+                    .snapshots()
+                : Firestore.instance.collection("offers").snapshots(),
+                builder: (context, snapshot) {
+                  
+                  if (!snapshot.hasData) {
+                    return Center(child:CircularProgressIndicator());
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (context, i) {
+                          DocumentSnapshot rsnapshot = snapshot.data.documents[i];
+                          return Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Container(
+                                    child: Center(
+                                        child:
+                                            Text(rsnapshot.data["nameofoffer"])),
+                                    width: 100),
+                                elevation: 1,
+                              );
+                        },
+                      ),
+                    );
+                  }
+              //     if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+              // switch (snapshot.connectionState) {
+              //   case ConnectionState.waiting:
+              //     return new Text('Loading...');
+              //   default:
+              //     return new ListView(
+              //       children:
+              //           snapshot.data.documents.map((DocumentSnapshot document) {
+              //         return new ListTile(
+              //           title: new Text(document['nameofoffer']),
+              //         );
+              //       }).toList(),
+              //     );
+              //   }
+                }
+          ),
         )
       ]),
     );
@@ -872,16 +899,3 @@ class _MainPageSearchBoxState extends State<MainPageSearchBox> {
   }
 }
 
-Widget buildResultCard(data) {
-  return Card(
-      elevation: 2.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      child: Container(
-          child: Center(
-        child: Text(
-          data['nameofoffer'],
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black, fontSize: 20),
-        ),
-      )));
-}
