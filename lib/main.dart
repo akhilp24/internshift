@@ -285,37 +285,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool filterButtonPressed = false;
-  bool pressedSearch = true;
-  TextEditingController searchController = new TextEditingController();
-  var queryResultSet = [];
-  var tempSearchStore = [];
-  initiateSearch(value) {
-    if (value.length == 0) {
-      setState(() {
-        queryResultSet = [];
-        tempSearchStore = [];
-      });
-    }
-
-    var capitalizedValue =
-        value.substring(0, 1).toUpperCase() + value.substring(1);
-    if (queryResultSet.length == 0 && value.length == 1) {
-      SearchService().searchByName(value).then((QuerySnapshot docs) {
-        for (int i = 0; i < docs.documents.length; ++i) {
-          queryResultSet.add(docs.documents[i].data);
-        }
-      });
-    } else {
-      tempSearchStore = [];
-      queryResultSet.forEach((element) {
-        if (element['nameofoffer'].startsWith(capitalizedValue)) {
-          setState(() {
-            tempSearchStore.add(element);
-          });
-        }
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -341,107 +310,52 @@ class _HomePageState extends State<HomePage> {
               ),
               bigName()
             ]),
-            Center(
+            MainPageSearchBox(),
+            Align(
+              alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width * 1 / 1.2,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 3,
-                              spreadRadius: 0,
-                              offset: Offset(0, 4),
-                              color: Colors.grey[200]),
-                        ],
-                        color: Colors.white),
+                padding: const EdgeInsets.only(top: 15.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      filterButtonPressed = !filterButtonPressed;
+                    });
+                  },
+                  child: Center(
                     child: Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8.0, left: 8, right: 25, bottom: 8),
-                            child: TextField(
-                                cursorHeight: 20,
-                                controller: searchController,
-                                onSubmitted: (value) {
-                                  print(value);
-                                  setState(() {
-                                    pressedSearch = true;
-                                  });
-                                },
-                                onChanged: (val) {
-                                  initiateSearch(val);
-                                },
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    focusColor: ColorPalette().themeColor,
-                                    hoverColor: ColorPalette().themeColor,
-                                    fillColor: ColorPalette().themeColor,
-                                    icon: Icon(
-                                      Icons.search,
-                                      color: ColorPalette().themeColor,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: ColorPalette().themeColor),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Icon(
+                                        Icons.filter_alt,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                    hintText: "Search offers",
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide.none))),
+                                    Text(
+                                      "Filter",
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  ],
+                                )),
                           ),
-                        ),
-                      ],
-                    )),
+                          SizedBox(width: 100),
+                          SizedBox(width: 100),
+                        ]),
+                  ),
+                ),
               ),
             ),
-            pressedSearch
-                ? Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            filterButtonPressed = !filterButtonPressed;
-                          });
-                        },
-                        child: Center(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: Container(
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: ColorPalette().themeColor),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Icon(
-                                              Icons.filter_alt,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Filter",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          )
-                                        ],
-                                      )),
-                                ),
-                                SizedBox(width: 100),
-                                SizedBox(width: 100),
-                              ]),
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox(),
             filterButtonPressed
                 ? Padding(
                     padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
@@ -474,68 +388,54 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : SizedBox(),
-            pressedSearch
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Container(
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Container(
+                width: determineWidth(),
+                child: Center(
+                  child: Stack(alignment: Alignment.center, children: [
+                    Container(
                       width: determineWidth(),
-                      child: Center(
-                        child: Stack(alignment: Alignment.center, children: [
-                          Container(
-                            width: determineWidth(),
-                            height: 275,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 2,
-                                      spreadRadius: 0,
-                                      offset: Offset(0, 4),
-                                      color: Colors.grey[300]),
-                                ],
-                                gradient: LinearGradient(colors: [
-                                  Color(0xffFAFAFA),
-                                  Color(0xffFAFAFA)
-                                ])),
-                          ),
-                          Column(children: [
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 5.0, left: 15),
-                                    child: Text(
-                                      'Featured Offers',
-                                      style: TextStyle(
-                                          color: Color(0xff858585),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ]),
-                            featuredOffers(0),
-                            featuredOffers(1)
-                          ])
-                        ]),
-                      ),
+                      height: 275,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 2,
+                                spreadRadius: 0,
+                                offset: Offset(0, 4),
+                                color: Colors.grey[300]),
+                          ],
+                          gradient: LinearGradient(
+                              colors: [Color(0xffFAFAFA), Color(0xffFAFAFA)])),
                     ),
-                  )
-                : SizedBox(),
-            pressedSearch
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: ViewAllTopRatedOffersButton(),
-                  )
-                : SizedBox(),
-            pressedSearch
-                ? NewListings()
-                : GridView.count(
-                    crossAxisCount: 2,
-                    primary: false,
-                    shrinkWrap: true,
-                    children: tempSearchStore.map((element) {
-                      return buildResultCard(element);
-                    }).toList())
+                    Column(children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 5.0, left: 15),
+                              child: Text(
+                                'Featured Offers',
+                                style: TextStyle(
+                                    color: Color(0xff858585),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ]),
+                      featuredOffers(0),
+                      featuredOffers(1)
+                    ])
+                  ]),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ViewAllTopRatedOffersButton(),
+            ),
+            NewListings(),
           ],
         ),
       ),
@@ -718,20 +618,20 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                   leading: Icon(Icons.edit),
                   title: Text("Edit Profile Information"),
                   onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingsPage(
-                                  image:
-                                      "https://cdn.icon-icons.com/icons2/2119/PNG/512/google_icon_131222.png",
-                                  userName: "user",
-                                  firstName: "firstName",
-                                  lastName: "lastName",
-                                  school: "TAG",
-                                  password: "password",
-                                  email: "aaoifjeiofj",
-                                )));
+                    // Navigator.pop(context);
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => SettingsPage(
+                    //               image:
+                    //                   "https://cdn.icon-icons.com/icons2/2119/PNG/512/google_icon_131222.png",
+                    //               userName: "user",
+                    //               firstName: "firstName",
+                    //               lastName: "lastName",
+                    //               school: "TAG",
+                    //               password: "password",
+                    //               email: "aaoifjeiofj",
+                    //             )));
                   },
                 ),
                 ListTile(
@@ -791,4 +691,211 @@ Widget featuredOffers(int index) {
       }
     },
   );
+}
+
+class OtherSearchPage extends StatefulWidget {
+  final String val;
+
+  OtherSearchPage({this.val});
+  @override
+  _OtherSearchPageState createState() => _OtherSearchPageState();
+}
+
+class _OtherSearchPageState extends State<OtherSearchPage> {
+  var queryResultSet = [];
+  var tempSearchStore = [];
+  void initState() {
+    super.initState();
+    initiateSearch(widget.val);
+    print(widget.val);
+  }
+
+  initiateSearch(value) {
+    if (value.length == 0) {
+      setState(() {
+        queryResultSet = [];
+        tempSearchStore = [];
+      });
+    }
+
+    var capitalizedValue =
+        value.substring(0, 1).toUpperCase() + value.substring(1);
+    if (queryResultSet.length == 0 && value.length == 1) {
+      SearchService().searchByName(value).then((QuerySnapshot docs) {
+        for (int i = 0; i < docs.documents.length; ++i) {
+          queryResultSet.add(docs.documents[i].data);
+        }
+      });
+    } else {
+      tempSearchStore = [];
+      queryResultSet.forEach((element) {
+        if (element['nameofoffer'].startsWith(capitalizedValue)) {
+          setState(() {
+            tempSearchStore.add(element);
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: ColorPalette().themeColor,
+          ),
+        ),
+      ),
+      body: Column(children: [
+        OtherPageSearchBox(),
+        GridView.count(
+            crossAxisCount: 2,
+            primary: false,
+            shrinkWrap: true,
+            children: tempSearchStore.map((element) {
+              return buildResultCard(element);
+            }).toList())
+      ]),
+    );
+  }
+}
+
+class MainPageSearchBox extends StatefulWidget {
+  @override
+  _MainPageSearchBoxState createState() => _MainPageSearchBoxState();
+}
+
+class _MainPageSearchBoxState extends State<MainPageSearchBox> {
+  TextEditingController searchController = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width * 1 / 1.2,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 3,
+                      spreadRadius: 0,
+                      offset: Offset(0, 4),
+                      color: Colors.grey[200]),
+                ],
+                color: Colors.white),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, left: 8, right: 25, bottom: 8),
+                    //TODO: SearchBox
+                    child: TextField(
+                        cursorHeight: 20,
+                        controller: searchController,
+                        onSubmitted: (value) {
+                          print(value);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OtherSearchPage(
+                                        val: value,
+                                      )));
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusColor: ColorPalette().themeColor,
+                            hoverColor: ColorPalette().themeColor,
+                            fillColor: ColorPalette().themeColor,
+                            icon: Icon(
+                              Icons.search,
+                              color: ColorPalette().themeColor,
+                            ),
+                            hintText: "Search offers",
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide.none))),
+                  ),
+                ),
+              ],
+            )),
+      ),
+    );
+  }
+}
+
+class OtherPageSearchBox extends StatefulWidget {
+  @override
+  _OtherPageSearchBoxState createState() => _OtherPageSearchBoxState();
+}
+
+class _OtherPageSearchBoxState extends State<OtherPageSearchBox> {
+  TextEditingController otherTextEditingController =
+      new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width * 1 / 1.2,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 3,
+                      spreadRadius: 0,
+                      offset: Offset(0, 4),
+                      color: Colors.grey[200]),
+                ],
+                color: Colors.white),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, left: 8, right: 25, bottom: 8),
+                    //TODO: SearchBox
+                    child: TextField(
+                        cursorHeight: 20,
+                        controller: otherTextEditingController,
+                        onSubmitted: (value) {
+                          print(value);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OtherSearchPage(
+                                        val: value,
+                                      )));
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusColor: ColorPalette().themeColor,
+                            hoverColor: ColorPalette().themeColor,
+                            fillColor: ColorPalette().themeColor,
+                            icon: Icon(
+                              Icons.search,
+                              color: ColorPalette().themeColor,
+                            ),
+                            hintText: "Search offers",
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide.none))),
+                  ),
+                ),
+              ],
+            )),
+      ),
+    );
+  }
 }

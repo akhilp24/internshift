@@ -68,12 +68,14 @@ class _NewListingsState extends State<NewListings> {
                             DocumentSnapshot bsnapshot =
                                 snapshot.data.documents[index];
                             return Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                               child: Container(
                                   child: Center(
                                       child:
                                           Text(bsnapshot.data["nameofoffer"])),
                                   width: 100),
-                              elevation: 2,
+                              elevation: 1,
                             );
                           },
                         ),
