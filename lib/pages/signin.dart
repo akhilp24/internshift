@@ -28,6 +28,7 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController emailTextEditingController = new TextEditingController();
   TextEditingController passwordTexteditingController = new TextEditingController();
   bool isLoading = false;
+  
   QuerySnapshot snapshotUserInfo;
   signIn() {
     if(formKey.currentState.validate()) {

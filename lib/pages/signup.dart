@@ -223,7 +223,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
-        user = widget.username;
+        
       });
 
       await AuthMethods()
@@ -238,7 +238,10 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
             "school": schoolTextEditingController.text,
             "age": age.toString()
           };
-
+          setState(() {
+            user = widget.username;
+          });
+          
           DatabaseMethods().uploadUserInfo(userInfoMap, widget.username);
           HelperFunctions.saveUserEmailSharedPreference(widget.email);
           HelperFunctions.saveUserNameSharedPreference(widget.username);
@@ -248,7 +251,7 @@ class _MoreInfoSignUpPageState extends State<MoreInfoSignUpPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => MainPage(
-                        userName: user,
+                        userName: user
                       )));
         }
       });

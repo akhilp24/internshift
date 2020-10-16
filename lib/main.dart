@@ -60,10 +60,11 @@ class _MainPageState extends State<MainPage> {
   int currentIndex = 1;
   @override
   void initState() {
+    print(widget.userName);
     super.initState();
-    print(HelperFunctions.getUserNameSharedPreference().toString());
+    
   }
-
+  
   final _children = [
     Saved(),
     HomePage(),
@@ -277,6 +278,8 @@ class TopRatedInternships extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
+  final String username;
+  HomePage({this.username});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -306,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 20, color: Color(0xff759E8B)),
                 ),
               ),
-              bigName()
+              bigName(widget.username)
             ]),
             MainPageSearchBox(),
             Align(
@@ -527,7 +530,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
     return StreamBuilder(
         stream: Firestore.instance
             .collection('users')
-            .document('akhilp24')
+            .document(widget.userName ?? "akhilp24")
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -634,11 +637,11 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
   }
 }
 
-Widget bigName() {
+Widget bigName(String username) {
   return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .document('akhilpeddikuppa')
+          .document(username ?? 'akhilp24')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
