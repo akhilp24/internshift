@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/rendering.dart';
 
+import 'constants.dart';
 
 class NewListings extends StatefulWidget {
   @override
@@ -68,45 +69,51 @@ class _NewListingsState extends State<NewListings> {
                                 snapshot.data.documents[index];
                             return GestureDetector(
                               onTap: () {
-                                appAddModalBottomSheet(context, bsnapshot.data['nameofoffer'], bsnapshot.data['employer'], bsnapshot.data['location'], bsnapshot.data['logo']);
+                                appAddModalBottomSheet(
+                                    context,
+                                    bsnapshot.data['nameofoffer'],
+                                    bsnapshot.data['employer'],
+                                    bsnapshot.data['location'],
+                                    bsnapshot.data['logo']);
                               },
-                                                          child: Card(
-                                elevation: 1,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: Column(
-                                    
-                                    children: [
+                              child: Card(
+                                  elevation: 1,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Column(children: [
                                       CircleAvatar(
-                                        radius: 36,
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage: NetworkImage(bsnapshot.data['logo'])
-                                      ),
-                                      Container(
-                                        width: 125,
-                                      child: Text(
-                                        bsnapshot.data["nameofoffer"],
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold
+                                          radius: 36,
+                                          backgroundColor: Colors.transparent,
+                                          backgroundImage: NetworkImage(
+                                              bsnapshot.data['logo'])),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: Container(
+                                            width: 125,
+                                            child: Text(
+                                              bsnapshot.data["nameofoffer"],
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color:
+                                                    ColorPalette().themeColor,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    
-                                    children: [
-                                      Text(bsnapshot.data['employer']),
-                                      Text(bsnapshot.data['location'])
-                                    ]
-                                  )
-                                  
-                                    ]
-                                  ),
-                                )
-                                
-                              ),
+                                      Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(bsnapshot.data['employer']),
+                                            Text(bsnapshot.data['location'])
+                                          ])
+                                    ]),
+                                  )),
                             );
                           },
                         ),
