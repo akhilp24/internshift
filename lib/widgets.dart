@@ -89,29 +89,30 @@ class _NewListingsState extends State<NewListings> {
                                           backgroundImage: NetworkImage(
                                               bsnapshot.data['logo'])),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.only(
+                                            top: 8.0, bottom: 10),
                                         child: Center(
                                           child: Container(
-                                            width: 125,
+                                            width: 200,
                                             child: Text(
                                               bsnapshot.data["nameofoffer"],
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                color:
-                                                    ColorPalette().themeColor,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                                  color:
+                                                      ColorPalette().themeColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
                                             ),
                                           ),
                                         ),
                                       ),
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(bsnapshot.data['employer']),
-                                            Text(bsnapshot.data['location'])
-                                          ])
+                                      Text(
+                                        bsnapshot.data['employer'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Color(0xffBDBDBD)),
+                                      )
                                     ]),
                                   )),
                             );
