@@ -224,7 +224,7 @@ void appAddModalBottomSheet(context, String nameofJob, String employer,
                     Align(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          "The text of the description",
+                          "When: Monday, October 19th @ 8:00 PM.Minimum Age: 13",
                         ))
                   ])),
             ),
@@ -283,7 +283,7 @@ class _ApplyandSavedButtonsState extends State<ApplyandSavedButtons> {
           StreamBuilder(
             stream: Firestore.instance
                 .collection('users')
-                .document('akhilpeddikuppa')
+                .document('akhilp24')
                 .collection('savedopenings')
                 .snapshots(),
             builder: (context, snapshot) {
@@ -321,7 +321,7 @@ class _ApplyandSavedButtonsState extends State<ApplyandSavedButtons> {
                         child: StreamBuilder(
                             stream: Firestore.instance
                                 .collection('users')
-                                .document('akhilpeddikuppa')
+                                .document('akhilp24')
                                 .collection('savedopenings')
                                 .snapshots(),
                             builder: (context, snapshot) {

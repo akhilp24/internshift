@@ -58,17 +58,13 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 1;
-  @override
-  void initState() {
-    print(widget.userName);
-    super.initState();
-    
-  }
-  
+
   final _children = [
     Saved(),
     HomePage(),
-    NotificationsPage(),
+    NotificationsPage(
+      username: "djje",
+    ),
   ];
   void onTabTapped(int index) {
     setState(() {
@@ -253,10 +249,12 @@ class TopRatedInternships extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.location_on,
+                        size: 14,
                         color: Color(0xff759E8B),
                       ),
                       Text(employerLocation,
-                          style: TextStyle(color: Color(0xff759E8B)))
+                          style:
+                              TextStyle(color: Color(0xff759E8B), fontSize: 14))
                     ],
                     mainAxisAlignment: MainAxisAlignment.start,
                   )
@@ -530,7 +528,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
     return StreamBuilder(
         stream: Firestore.instance
             .collection('users')
-            .document(widget.userName ?? "akhilp24")
+            .document("akhilpeddikuppa")
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -641,7 +639,7 @@ Widget bigName(String username) {
   return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .document(username ?? 'akhilp24')
+          .document('akhilpeddikuppa')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -692,20 +690,16 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
   TextEditingController otherTextEditingController =
       new TextEditingController();
   String name = "";
-  
-  void initState() {
-    if(widget.val != null) {
-      setState(() {
-      name = widget.val.toLowerCase().trim();
-    });
-    }
-    
-    super.initState();
 
-    
+  void initState() {
+    if (widget.val != null) {
+      setState(() {
+        name = widget.val.toLowerCase().trim();
+      });
+    }
+
+    super.initState();
   }
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -746,15 +740,13 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(
                             top: 8.0, left: 8, right: 25, bottom: 8),
-                       
                         child: TextField(
                             cursorHeight: 20,
                             controller: otherTextEditingController,
                             onChanged: (value) {
-                              
                               setState(() {
-      name = value.toLowerCase();
-    });
+                                name = value.toLowerCase();
+                              });
                               print(value);
                             },
                             decoration: InputDecoration(
@@ -776,92 +768,93 @@ class _OtherSearchPageState extends State<OtherSearchPage> {
           ),
         ),
         Expanded(
-         
           child: StreamBuilder(
-            stream: 
-            name != "" && name != null
-                ? Firestore.instance
-                    .collection('offers')
-                    .where("searchKey", isEqualTo: name.substring(0,1))
-                    .snapshots()
-                : Firestore.instance.collection("offers").snapshots(),
-                builder: (context, snapshot) {
-                  
-                  if (!snapshot.hasData) {
-                    return Center(child:CircularProgressIndicator());
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder: (context, i) {
-                          DocumentSnapshot rsnapshot = snapshot.data.documents[i];
-                          return GestureDetector(
-                              onTap: () {
-                                appAddModalBottomSheet(context, rsnapshot.data['nameofoffer'], rsnapshot.data['employer'], rsnapshot.data['location'], rsnapshot.data['logo']);
-                              },
-                                                          child: Card(
-                                elevation: 1,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: Column(
-                                    
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 36,
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage: NetworkImage(rsnapshot.data['logo'])
-                                      ),
-                                      Container(
-                                        width: 125,
-                                      child: Text(
-                                        rsnapshot.data["nameofoffer"],
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold
+              stream: name != "" && name != null
+                  ? Firestore.instance
+                      .collection('offers')
+                      .where("searchKey", isEqualTo: name.substring(0, 1))
+                      .snapshots()
+                  : Firestore.instance.collection("offers").snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 40.0),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, i) {
+                        DocumentSnapshot rsnapshot = snapshot.data.documents[i];
+                        return GestureDetector(
+                          onTap: () {
+                            appAddModalBottomSheet(
+                                context,
+                                rsnapshot.data['nameofoffer'],
+                                rsnapshot.data['employer'],
+                                rsnapshot.data['location'],
+                                rsnapshot.data['logo']);
+                          },
+                          child: Card(
+                              elevation: 1,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Column(children: [
+                                  CircleAvatar(
+                                      radius: 36,
+                                      backgroundColor: Colors.transparent,
+                                      backgroundImage:
+                                          NetworkImage(rsnapshot.data['logo'])),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 10),
+                                    child: Center(
+                                      child: Container(
+                                        width: 200,
+                                        child: Text(
+                                          rsnapshot.data["nameofoffer"],
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: ColorPalette().themeColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
                                         ),
                                       ),
-                                      ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    
-                                    children: [
-                                      Text(rsnapshot.data['employer']),
-                                      Text(rsnapshot.data['location'])
-                                    ]
-                                  )
-                                  
-                                    ]
+                                    ),
                                   ),
-                                )
-                                
-                              ),
-                            );
-                        },
-                      ),
-                    );
-                  }
-              //     if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-              // switch (snapshot.connectionState) {
-              //   case ConnectionState.waiting:
-              //     return new Text('Loading...');
-              //   default:
-              //     return new ListView(
-              //       children:
-              //           snapshot.data.documents.map((DocumentSnapshot document) {
-              //         return new ListTile(
-              //           title: new Text(document['nameofoffer']),
-              //         );
-              //       }).toList(),
-              //     );
-              //   }
+                                  Text(
+                                    rsnapshot.data['employer'],
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Color(0xffBDBDBD)),
+                                  )
+                                ]),
+                              )),
+                        );
+                      },
+                    ),
+                  );
                 }
-          ),
+                //     if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+                // switch (snapshot.connectionState) {
+                //   case ConnectionState.waiting:
+                //     return new Text('Loading...');
+                //   default:
+                //     return new ListView(
+                //       children:
+                //           snapshot.data.documents.map((DocumentSnapshot document) {
+                //         return new ListTile(
+                //           title: new Text(document['nameofoffer']),
+                //         );
+                //       }).toList(),
+                //     );
+                //   }
+              }),
         )
       ]),
     );
@@ -900,7 +893,6 @@ class _MainPageSearchBoxState extends State<MainPageSearchBox> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         top: 8.0, left: 8, right: 25, bottom: 8),
-                
                     child: TextField(
                         cursorHeight: 20,
                         controller: searchController,
@@ -933,4 +925,3 @@ class _MainPageSearchBoxState extends State<MainPageSearchBox> {
     );
   }
 }
-
